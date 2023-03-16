@@ -1,0 +1,17 @@
+{
+  "authors": [
+    "loziniak"
+  ],
+  "files": {
+    "solution": [
+      "protein-translation.red"
+    ],
+    "test": [
+      "protein-translation-test.red"
+    ],
+    "example": [
+      ".meta/example.red"
+    ]
+  },
+  "blurb": "Translate RNA sequences into proteins."
+}
