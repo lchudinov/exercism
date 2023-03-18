@@ -16,11 +16,8 @@ fn check_if_anagram(
     word_uppercase: &String,
     word_uppercase_sorted: &String,
 ) -> bool {
-    if anagram.to_uppercase() == *word_uppercase {
-        false
-    } else {
-        to_sorted_uppercase(anagram) == *word_uppercase_sorted
-    }
+    anagram.to_uppercase() != *word_uppercase
+        && to_sorted_uppercase(anagram) == *word_uppercase_sorted
 }
 
 fn to_sorted_uppercase(s: &str) -> String {
