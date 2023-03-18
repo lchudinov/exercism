@@ -1,7 +1,7 @@
 use std::collections::HashSet;
 
 pub fn anagrams_for<'a>(word: &str, possible_anagrams: &[&'a str]) -> HashSet<&'a str> {
-    let word_uppercase_sorted = to_sorted_uppercase_string(word);
+    let word_uppercase_sorted = to_sorted_uppercase(word);
     let word_uppercase = word.to_uppercase();
 
     possible_anagrams
@@ -13,19 +13,17 @@ pub fn anagrams_for<'a>(word: &str, possible_anagrams: &[&'a str]) -> HashSet<&'
 
 fn check_if_anagram(
     anagram: &str,
-    word_uppercase_string: &String,
+    word_uppercase: &String,
     word_uppercase_sorted: &String,
 ) -> bool {
-    let anagram_uppercase = anagram.to_uppercase();
-    if anagram_uppercase == *word_uppercase_string {
+    if anagram.to_uppercase() == *word_uppercase {
         false
     } else {
-        let anagram_uppercase_sorted = to_sorted_uppercase_string(anagram);
-        anagram_uppercase_sorted == *word_uppercase_sorted
+        to_sorted_uppercase(anagram) == *word_uppercase_sorted
     }
 }
 
-fn to_sorted_uppercase_string(s: &str) -> String {
+fn to_sorted_uppercase(s: &str) -> String {
     let mut v: Vec<char> = s.chars().map(|c| c.to_uppercase()).flatten().collect();
     v.sort_unstable();
     v.into_iter().collect()
