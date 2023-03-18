@@ -5,12 +5,12 @@ pub fn anagrams_for<'a>(word: &str, possible_anagrams: &[&'a str]) -> HashSet<&'
     let word_uppercase = word.to_uppercase();
 
     possible_anagrams
-        .into_iter()
+        .iter()
         .filter(|anagram| {
             anagram.to_uppercase() != word_uppercase
                 && to_uppercase_sorted(anagram) == word_uppercase_sorted
         })
-        .map(|&s| s)
+        .cloned()
         .collect()
 }
 
