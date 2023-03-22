@@ -1,6 +1,4 @@
 pub struct CircularBuffer<T>
-where
-    T: Default,
 {
     buffer: Vec<Option<T>>,
     write_pos: usize,
@@ -14,7 +12,7 @@ pub enum Error {
     FullBuffer,
 }
 
-impl<T: std::default::Default + std::clone::Clone> CircularBuffer<T> {
+impl<T: std::clone::Clone> CircularBuffer<T> {
     pub fn new(capacity: usize) -> Self {
         CircularBuffer {
             buffer: CircularBuffer::init(capacity),
