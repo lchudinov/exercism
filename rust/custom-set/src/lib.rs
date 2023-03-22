@@ -8,14 +8,14 @@ where
     T: std::cmp::PartialEq + std::clone::Clone + std::cmp::Ord,
 {
     pub fn new(input: &[T]) -> Self {
-        let mut v: Vec<_> = input.iter().cloned().collect();
+        let mut v: Vec<_> = input.to_vec();
         v.sort_unstable();
         v.dedup();
         CustomSet { vec: v }
     }
 
     pub fn contains(&self, element: &T) -> bool {
-        self.vec.contains(&element)
+        self.vec.contains(element)
     }
 
     pub fn add(&mut self, element: T) {
@@ -63,11 +63,11 @@ where
 
     #[must_use]
     pub fn union(&self, other: &Self) -> Self {
-        let mut v1: Vec<_> = self.vec.clone();
-        let mut v2: Vec<_> = other.vec.clone();
-        v1.append(&mut v2);
-        v1.sort();
-        v1.dedup();
-        CustomSet { vec: v1 }
+        let mut v: Vec<_> = Vec::with_capacity(self.vec.len() + other.vec.len());
+        v.extend_from_slice(&self.vec);
+        v.extend_from_slice(&other.vec);
+        v.sort_unstable();
+        v.dedup();
+        CustomSet { vec: v }
     }
 }
