@@ -1,14 +1,14 @@
 /// Determines whether the supplied string is a valid ISBN number
 pub fn is_valid_isbn(isbn: &str) -> bool {
     let code = isbn.chars().filter(|&c| c != '-').rev().enumerate().fold(
-        0usize,
-        |acc, (index, c)| match (index, c) {
-            (0, 'X') => 10,
-            (n, c) if c.is_ascii_digit() && n < 10 => {
-                acc + (n + 1) * (c.to_digit(10).unwrap()) as usize
+        Some(0usize),
+        |acc, (index, c)| match (index, c, acc) {
+            (0, 'X', _) => Some(10),
+            (n, '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9', Some(a)) if n < 10 => {
+                Some(a + (n + 1) * (c.to_digit(10).unwrap()) as usize)
             }
-            _ => 1,
+            _ => None,
         },
     );
-    code > 0 && code % 11 == 0
+    matches!(code, Some(n) if n > 0 && n % 11 == 0)
 }
