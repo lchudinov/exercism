@@ -4,10 +4,12 @@ use std::collections::HashMap;
 pub fn frequency(input: &[&str], _worker_count: usize) -> HashMap<char, usize> {
     let mut m = HashMap::<char, usize>::new();
 
-    let v : Vec<_> = input.par_iter().map(|&s| freq(s)).collect();
+    let v: Vec<_> = input.par_iter().map(|&s| freq(s)).collect();
     for hm in v {
         for (key, value) in hm {
-            m.entry(key).and_modify(|count| *count += value).or_insert(value);
+            m.entry(key)
+                .and_modify(|count| *count += value)
+                .or_insert(value);
         }
     }
     m
