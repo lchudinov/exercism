@@ -4,5 +4,3 @@ name = "parallel-letter-frequency"
 version = "0.0.0"
 
 [dependencies]
-scoped_threadpool = "0.1.9"
-threadpool = "1.8.1"
