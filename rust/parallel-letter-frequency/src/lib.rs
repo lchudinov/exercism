@@ -1,26 +1,19 @@
-use std::{collections::HashMap};
-use std::thread;
+use rayon::prelude::*;
+use std::collections::HashMap;
 
 pub fn frequency(input: &[&str], _worker_count: usize) -> HashMap<char, usize> {
     let mut m = HashMap::<char, usize>::new();
-    let v : Vec<String> = input.iter().map(|&s| s.to_string()).collect();
-    let mut pool = vec![];
-    for s in v {
-        let handle = thread::spawn(move || freq(&s));
-        pool.push(handle);
-    }
-    for handle in pool {
-        let mx = handle.join().unwrap();
-        for (&key, &value) in mx.iter() {
-            m.entry(key)
-                .and_modify(|count| *count += value)
-                .or_insert(value);
+
+    let v : Vec<_> = input.par_iter().map(|&s| freq(s)).collect();
+    for hm in v {
+        for (key, value) in hm {
+            m.entry(key).and_modify(|count| *count += value).or_insert(value);
         }
     }
     m
 }
 
-fn freq(input: &String) -> HashMap<char, usize> {
+fn freq(input: &str) -> HashMap<char, usize> {
     let mut m = HashMap::<char, usize>::new();
     for ch in input
         .chars()
