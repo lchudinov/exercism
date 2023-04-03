@@ -7,7 +7,7 @@ pub fn collatz(n: u64) -> Option<u64> {
     while num != 1 {
         if num % 2 == 0 {
             num /= 2;
-        } else if let Some(Some(res)) = 3u64.checked_mul(num).map(|v| v.checked_add(1)) {
+        } else if let Some(res) = 3u64.checked_mul(num)?.checked_add(1) {
             num = res;
         } else {
             return None;
