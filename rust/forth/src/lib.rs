@@ -39,6 +39,12 @@ impl Forth {
                         if w.parse::<i32>().is_ok() {
                             return Err(Error::InvalidWord);
                         }
+                        if def.contains(&w) {
+                            def = self.expand_def(&def, &w);
+                        }
+                        if self.words.contains_key(&w) {
+                            self.expand_word(&w);
+                        }
                         self.words.insert(w, def.into());
                         def = VecDeque::new();
                         in_def = false;
@@ -140,5 +146,39 @@ impl Forth {
             return Err(Error::UnknownWord);
         }
         Ok(())
+    }
+
+    fn expand_word(&mut self, word: &String) {
+        let def = self.words.get(word).unwrap().clone();
+        let mut new_words = HashMap::new();
+        for (key, value) in &self.words {
+            if key == word {
+                new_words.insert(key.clone(), value.clone());
+                continue;
+            }
+            let mut v = Vec::new();
+            for w in value {
+                if w == word {
+                    v.append(&mut def.clone());
+                } else {
+                    v.push(w.to_string());
+                }
+            }
+            new_words.insert(key.clone(), v);
+        }
+        self.words = new_words;
+    }
+
+    fn expand_def(&mut self, def: &VecDeque<String>, word: &String) -> VecDeque<String> {
+        let old_def = self.words.get(word).unwrap().clone();
+        let mut v = Vec::new();
+        for w in def {
+            if w == word {
+                v.append(&mut old_def.clone());
+            } else {
+                v.push(w.to_string());
+            }
+        }
+        v.into()
     }
 }
