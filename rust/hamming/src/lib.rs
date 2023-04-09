@@ -1,0 +1,15 @@
+/// Return the Hamming distance between the strings,
+/// or None if the lengths are mismatched.
+pub fn hamming_distance(s1: &str, s2: &str) -> Option<usize> {
+    if s1.len() != s2.len() {
+        None
+    } else {
+        Some(s1.chars().enumerate().fold(0, |result: usize, (i, c)| {
+            if s2.chars().nth(i) != Some(c) {
+                result + 1
+            } else {
+                result
+            }
+        }))
+    }
+}
