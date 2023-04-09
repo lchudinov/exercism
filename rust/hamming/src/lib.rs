@@ -4,12 +4,15 @@ pub fn hamming_distance(s1: &str, s2: &str) -> Option<usize> {
     if s1.len() != s2.len() {
         None
     } else {
-        Some(s1.chars().enumerate().fold(0, |result: usize, (i, c)| {
-            if s2.chars().nth(i) != Some(c) {
-                result + 1
-            } else {
-                result
-            }
-        }))
+        Some(s1.chars().zip(s2.chars()).fold(
+            0,
+            |result, (c1, c2)| {
+                if c1 != c2 {
+                    result + 1
+                } else {
+                    result
+                }
+            },
+        ))
     }
 }
