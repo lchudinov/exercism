@@ -2,32 +2,35 @@ const std = @import("std");
 const ArrayList = std.ArrayList;
 
 pub fn isValidIsbn10(s: []const u8) bool {
-    var iter = std.mem.split(u8, s, "-");
-    var list = ArrayList(u8).init(std.heap.page_allocator);
-    defer list.deinit();
-    while (iter.next()) |chunk| {
-        _ = list.writer().write(chunk) catch unreachable;
-    }
-    const s2 = list.items;
-    if (s2.len != 10) {
+    var sum: usize = 0;
+    var pos: usize = 0;
+    if (s.len < 10) {
         return false;
     }
-    var sum: usize = 0;
-    for (s2, 0..) |c, i| {
-        const mult = 10 - i;
-        if (i < 9 and !std.ascii.isDigit(c)) {
+    for (s) |c| {
+        if (c == '-') {
+            continue;
+        }
+        const mult = 10 - pos;
+        if (pos < 9 and !std.ascii.isDigit(c)) {
             return false;
         }
-        if (i == 9 and (c != 'X' and !std.ascii.isDigit(c))) {
+        if (pos == 9 and (c != 'X' and !std.ascii.isDigit(c))) {
             return false;
         }
-        if (i < 9) {
+        if (pos > 9) {
+            return false;
+        }
+        if (pos < 9) {
             sum += (c - '0') * mult;
-        } else if (c == 'X') {
+        } else if (pos == 9 and c == 'X') {
             sum += 10;
-        } else {
+        } else if (pos == 9) {
             sum += (c - '0');
+        } else {
+            return false;
         }
+        pos += 1;
     }
     return sum % 11 == 0;
 }
