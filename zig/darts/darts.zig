@@ -1,13 +1,22 @@
 pub const Coordinate = struct {
-    // This struct, as well as its fields and methods, needs to be implemented.
+    x: f32,
+    y: f32,
 
     pub fn init(x_coord: f32, y_coord: f32) Coordinate {
-        _ = x_coord;
-        _ = y_coord;
-        @compileError("please implement the init method");
+        return Coordinate{ .x = x_coord, .y = y_coord };
     }
+
     pub fn score(self: Coordinate) usize {
-        _ = self;
-        @compileError("please implement the score method");
+        const distance = self.x * self.x + self.y * self.y;
+        if (distance > 100.0) {
+            return 0;
+        }
+        if (distance > 25.0) {
+            return 1;
+        }
+        if (distance > 1.0) {
+            return 5;
+        }
+        return 10;
     }
 };
