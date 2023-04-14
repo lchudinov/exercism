@@ -2,7 +2,7 @@ const std = @import("std");
 const mem = std.mem;
 
 pub fn response(s: []const u8) []const u8 {
-    const trimmed = mem.trim(u8, s, " \t\n\r");
+    const trimmed = mem.trim(u8, s, &std.ascii.whitespace);
     const isYelling = isUppercase(trimmed);
     const isQuestion = mem.endsWith(u8, trimmed, "?");
     const isSilence = trimmed.len == 0;
