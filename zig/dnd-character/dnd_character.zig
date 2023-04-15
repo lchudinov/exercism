@@ -1,4 +1,5 @@
 const std = @import("std");
+const sort = std.sort;
 
 var rng = std.rand.DefaultPrng.init(0);
 
@@ -7,22 +8,13 @@ pub fn modifier(score: i8) i8 {
 }
 
 pub fn ability() i8 {
-    const scores = [4]i8{ rollDice(), rollDice(), rollDice(), rollDice() };
-    const min = std.math.min(std.math.min3(scores[0], scores[1], scores[2]), scores[3]);
-    var scoreExcluded = false;
-    var sum: i8 = 0;
-    for (scores) |score| {
-        if (score == min and !scoreExcluded) {
-            scoreExcluded = true;
-            continue;
-        }
-        sum += score;
-    }
-    return sum;
+    var scores = [4]i8{ rollDice(), rollDice(), rollDice(), rollDice() };
+    sort.sort(i8, &scores, {}, sort.desc(i8));
+    return scores[0] + scores[1] + scores[2];
 }
 
 fn rollDice() i8 {
-    return @intCast(i8, rng.next() % 6 + 1);
+    return rng.random().intRangeAtMostBiased(i8, 1, 6);
 }
 
 pub const Character = struct {
