@@ -13,47 +13,17 @@ pub const Allergen = enum(u8) {
 };
 
 pub fn isAllergicTo(score: u8, allergen: Allergen) bool {
-    const set = initAllergenSet(score);
-    return set.contains(allergen);
+    return score & @enumToInt(allergen) == @enumToInt(allergen);
 }
 
 pub fn initAllergenSet(score: usize) EnumSet(Allergen) {
     var set = EnumSet(Allergen){};
-    var s = score;
-    while (s >= 256) {
-        s -= 256;
-    }
-    while (s >= @enumToInt(Allergen.cats)) {
-        s -= @enumToInt(Allergen.cats);
-        set.insert(Allergen.cats);
-    }
-    while (s >= @enumToInt(Allergen.pollen)) {
-        s -= @enumToInt(Allergen.pollen);
-        set.insert(Allergen.pollen);
-    }
-    while (s >= @enumToInt(Allergen.chocolate)) {
-        s -= @enumToInt(Allergen.chocolate);
-        set.insert(Allergen.chocolate);
-    }
-    while (s >= @enumToInt(Allergen.tomatoes)) {
-        s -= @enumToInt(Allergen.tomatoes);
-        set.insert(Allergen.tomatoes);
-    }
-    while (s >= @enumToInt(Allergen.strawberries)) {
-        s -= @enumToInt(Allergen.strawberries);
-        set.insert(Allergen.strawberries);
-    }
-    while (s >= @enumToInt(Allergen.shellfish)) {
-        s -= @enumToInt(Allergen.shellfish);
-        set.insert(Allergen.shellfish);
-    }
-    while (s >= @enumToInt(Allergen.peanuts)) {
-        s -= @enumToInt(Allergen.peanuts);
-        set.insert(Allergen.peanuts);
-    }
-    while (s >= @enumToInt(Allergen.eggs)) {
-        s -= @enumToInt(Allergen.eggs);
-        set.insert(Allergen.eggs);
+    const fields = std.meta.fields(Allergen);
+    inline for (fields) |field| {
+        const allergen = @intToEnum(Allergen, field.value);
+        if (isAllergicTo(@truncate(u8, score), allergen)) {
+            set.insert(allergen);
+        }
     }
     return set;
 }
