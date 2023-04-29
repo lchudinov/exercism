@@ -16,63 +16,61 @@ pub fn LinkedList(comptime T: type) type {
         // You need to add the parameters to each method.
 
         pub fn push(self: *Self, node: *Node) void {
-            var last = self.last;
-            if (last == null) {
-                self.last = node;
-                self.first = node;
-            } else {
-                last.?.next = node;
+            if (self.last) |last| {
+                last.next = node;
                 node.prev = last;
                 self.last = node;
+            } else {
+                self.last = node;
+                self.first = node;
             }
             self.len += 1;
         }
 
         pub fn pop(self: *Self) ?*Node {
-            var last = self.last;
-            if (last == null) {
+            if (self.last) |last| {
+                if (last.prev) |prev| {
+                    prev.next = null;
+                    self.last = prev;
+                } else {
+                    self.first = null;
+                    self.last = null;
+                }
+                last.next = null;
+                last.prev = null;
+                self.len -= 1;
+                return last;
+            } else {
                 return null;
             }
-            var prev = last.?.prev;
-            if (prev == null) {
-                self.first = null;
-            } else {
-                prev.?.next = null;
-            }
-            last.?.next = null;
-            last.?.prev = null;
-            self.last = prev;
-            self.len -= 1;
-            return last;
         }
 
         pub fn shift(self: *Self) ?*Node {
-            var first = self.first;
-            if (first == null) {
+            if (self.first) |first| {
+                if (first.next) |next| {
+                    next.prev = null;
+                    self.first = next;
+                } else {
+                    self.last = null;
+                    self.first = null;
+                }
+                first.next = null;
+                first.prev = null;
+                self.len -= 1;
+                return first;
+            } else {
                 return null;
             }
-            var next = first.?.next;
-            if (next == null) {
-                self.last = null;
-            } else {
-                next.?.prev = null;
-            }
-            first.?.next = null;
-            first.?.prev = null;
-            self.first = next;
-            self.len -= 1;
-            return first;
         }
 
         pub fn unshift(self: *Self, node: *Node) void {
-            var first = self.first;
-            if (first == null) {
+            if (self.first) |first| {
+                node.next = first;
+                first.prev = node;
+                self.first = node;
+            } else {
                 self.first = node;
                 self.last = node;
-            } else {
-                node.next = first;
-                first.?.prev = node;
-                self.first = node;
             }
             self.len += 1;
         }
